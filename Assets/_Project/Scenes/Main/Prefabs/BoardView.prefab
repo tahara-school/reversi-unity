@@ -108,7 +108,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   diskOriginal: {fileID: -1595637999023815328, guid: f0302abc9d8407f45b39414543f5f472, type: 3}
+  selectedFrameOriginal: {fileID: 5549250183851743897, guid: 4a79f03b29573ff4da929f21a924b504, type: 3}
   diskParent: {fileID: 3544776563743925380}
+  selectedFrameParent: {fileID: 3544776563743925380}
   coordinateModel: {fileID: 2234407656356280713}
 --- !u!114 &2234407656356280713
 MonoBehaviour:
