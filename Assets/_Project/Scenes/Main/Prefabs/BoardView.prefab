@@ -70,6 +70,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3544776563743925380}
   - component: {fileID: 5782980457769394901}
+  - component: {fileID: 2234407656356280713}
   m_Layer: 0
   m_Name: BoardView
   m_TagString: Untagged
@@ -108,7 +109,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   diskOriginal: {fileID: -1595637999023815328, guid: f0302abc9d8407f45b39414543f5f472, type: 3}
   diskParent: {fileID: 3544776563743925380}
-  centerWorldTransform: {fileID: 3382114486039919205}
+  coordinateModel: {fileID: 2234407656356280713}
+--- !u!114 &2234407656356280713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9217667907917868491}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2a6110e0fe75e43aa99d245ae5febe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  centerTransform: {fileID: 3382114486039919205}
   boardBasisTransform: {fileID: 8660346352546159413}
   squareScale: 1
 --- !u!1001 &4366510722857689764
