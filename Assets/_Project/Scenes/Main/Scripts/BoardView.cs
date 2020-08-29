@@ -25,7 +25,7 @@ public class BoardView : MonoBehaviour
     /// <summary>
     /// 盤上に石を置きます。
     /// </summary>
-    /// <param name="position"> 盤上の座標 </param>
+    /// <param name="boardPosition"> 盤上の座標 </param>
     public void PutDisk(Vector2Int boardPosition)
     {
         // 引数が正しいかを確認。
@@ -41,5 +41,19 @@ public class BoardView : MonoBehaviour
         var putDisk = Instantiate(diskOriginal, coordinateModel.GetWorldPosition(boardPosition), Quaternion.identity, diskParent);
         // 置かれた石を二次元配列に保持。
         DiskViews[boardPosition.y, boardPosition.x] = putDisk;
+    }
+
+    /// <summary>
+    /// 盤上の石をひっくり返します。
+    /// </summary>
+    /// <param name="boardPosition"> 盤上の座標 </param>
+    public void TurnDisk(Vector2Int boardPosition)
+    {
+        if (!DiskViews[boardPosition.y, boardPosition.x]) {
+            throw new ArgumentException("石が置かれていません。");
+        }
+
+        // 指定された座標の石をひっくり返す。
+        DiskViews[boardPosition.y, boardPosition.x].Turn();
     }
 }
