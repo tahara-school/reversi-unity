@@ -18,7 +18,7 @@ public class BoardCoordinateModel : MonoBehaviour
     /// <summary>
     /// 盤の横一列のマスの数
     /// </summary>
-    private static int SquareNumberInLine => 8;
+    public static int SquareNumberInLine => 8;
 
 
     /// <summary> 

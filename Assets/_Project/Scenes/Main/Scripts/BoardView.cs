@@ -17,9 +17,9 @@ public class BoardView : MonoBehaviour
 
 
     /// <summary>
-    /// 盤の範囲外が指定されたときの例外
+    /// 盤に置かれた石
     /// </summary>
-    private static ArgumentOutOfRangeException OutOfRangeException => new ArgumentOutOfRangeException("盤の範囲外が指定されました。");
+    private DiskView[,] DiskViews { get; } = new DiskView[BoardCoordinateModel.SquareNumberInLine, BoardCoordinateModel.SquareNumberInLine];
 
 
     /// <summary>
@@ -28,13 +28,18 @@ public class BoardView : MonoBehaviour
     /// <param name="position"> 盤上の座標 </param>
     public void PutDisk(Vector2Int boardPosition)
     {
-        // 範囲外だったら例外を吐く。
+        // 引数が正しいかを確認。
         var isInRange = coordinateModel.GetIsInRange(boardPosition);
         if (!isInRange) {
-            throw OutOfRangeException;
+            throw new ArgumentOutOfRangeException("盤の範囲外が指定されました。");
+        }
+        if (DiskViews[boardPosition.y, boardPosition.x]) {
+            throw new ArgumentException("既に石が置かれています。");
         }
 
         // 指定された座標に石を生成。
-        Instantiate(diskOriginal, coordinateModel.GetWorldPosition(boardPosition), Quaternion.identity, diskParent);
+        var putDisk = Instantiate(diskOriginal, coordinateModel.GetWorldPosition(boardPosition), Quaternion.identity, diskParent);
+        // 置かれた石を二次元配列に保持。
+        DiskViews[boardPosition.y, boardPosition.x] = putDisk;
     }
 }
