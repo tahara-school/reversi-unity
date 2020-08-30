@@ -7,6 +7,11 @@ using Cysharp.Threading.Tasks;
 public interface ICharacter
 {
     /// <summary>
+    /// キャラクターの名前
+    /// </summary>
+    string Name { get; }
+
+    /// <summary>
     /// 石を置く場所を取得します。
     /// </summary>
     /// <param name="board"> 盤の情報取得インタフェース </param>

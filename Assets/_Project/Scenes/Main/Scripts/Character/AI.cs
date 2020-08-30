@@ -8,6 +8,12 @@ using Cysharp.Threading.Tasks;
 public class AI : ICharacter
 {
     /// <summary>
+    /// キャラクターの名前
+    /// </summary>
+    public string Name { get; } = "CPU";
+
+
+    /// <summary>
     /// 石を置く場所を取得します。
     /// </summary>
     /// <param name="board"> 盤の情報取得インタフェース </param>

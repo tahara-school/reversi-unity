@@ -11,8 +11,9 @@ public class Player : ICharacter
     /// コンストラクタ
     /// </summary>
     /// <param name="boardInput"> ボードの入力を取得するインタフェース </param>
-    public Player(IBoardInput boardInput)
+    public Player(string name, IBoardInput boardInput)
     {
+        Name = name;
         BoardInput = boardInput;
     }
 
@@ -21,6 +22,12 @@ public class Player : ICharacter
     /// ボードの入力を取得するインタフェース
     /// </summary>
     private IBoardInput BoardInput { get; set; }
+
+
+    /// <summary>
+    /// キャラクターの名前
+    /// </summary>
+    public string Name { get; set; }
 
 
     /// <summary>
