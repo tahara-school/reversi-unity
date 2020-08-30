@@ -17,6 +17,12 @@ public class DiskView : MonoBehaviour
 
 
     /// <summary>
+    /// 現在黒面か
+    /// </summary>
+    public bool IsBlack => IsBlackReactive.Value;
+
+
+    /// <summary>
     /// ひっくり返ります。
     /// </summary>
     public void Turn()

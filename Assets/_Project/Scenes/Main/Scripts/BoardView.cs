@@ -54,6 +54,37 @@ public class BoardView : MonoBehaviour
 
 
     /// <summary>
+    /// 盤のマスを選択します。
+    /// </summary>
+    /// <param name="boardPosition"> 盤上の座標 </param>
+    private void Select(Vector2Int boardPosition)
+    {
+        // 盤上の座標をワールド座標に変換。
+        var worldPosition = coordinateModel.GetWorldPosition(boardPosition);
+
+        // 既に枠があったら指定座標に移動。
+        if (SelectedFrame) {
+            SelectedFrame.transform.position = worldPosition;
+        }
+        // 無かったら指定座標に生成。
+        else {
+            SelectedFrame = Instantiate(selectedFrameOriginal, worldPosition, Quaternion.identity, selectedFrameParent);
+        }
+    }
+
+    /// <summary>
+    /// 盤のマスの選択を解除します。
+    /// </summary>
+    private void Deselect()
+    {
+        if (!SelectedFrame) {
+            throw new Exception("まだマスが選択されていないのに、選択解除しようとしました。");
+        }
+        Destroy(SelectedFrame);
+    }
+
+
+    /// <summary>
     /// 盤上に石を置きます。
     /// </summary>
     /// <param name="boardPosition"> 盤上の座標 </param>
@@ -93,33 +124,27 @@ public class BoardView : MonoBehaviour
     }
 
     /// <summary>
-    /// 盤のマスを選択します。
+    /// 盤の任意のマスの状態を取得します。
     /// </summary>
     /// <param name="boardPosition"> 盤上の座標 </param>
-    public void Select(Vector2Int boardPosition)
+    /// <returns> 盤の任意のマスの状態 </returns>
+    public SquareState GetSquareState(Vector2Int boardPosition)
     {
-        // 盤上の座標をワールド座標に変換。
-        var worldPosition = coordinateModel.GetWorldPosition(boardPosition);
+        var diskView = DiskViews[boardPosition.y, boardPosition.x];
 
-        // 既に枠があったら指定座標に移動。
-        if (SelectedFrame) {
-            SelectedFrame.transform.position = worldPosition;
+        // まだ石が置かれていない。
+        if (!diskView) {
+            return SquareState.Empty;
         }
-        // 無かったら指定座標に生成。
+
+        // 黒石が置かれている。
+        if (diskView.IsBlack) {
+            return SquareState.Black;
+        }
+        // 白石が置かれている。
         else {
-            SelectedFrame = Instantiate(selectedFrameOriginal, worldPosition, Quaternion.identity, selectedFrameParent);
+            return SquareState.White;
         }
-    }
-
-    /// <summary>
-    /// 盤のマスの選択を解除します。
-    /// </summary>
-    public void Deselect()
-    {
-        if (!SelectedFrame) {
-            throw new Exception("まだマスが選択されていないのに、選択解除しようとしました。");
-        }
-        Destroy(SelectedFrame);
     }
 
 
