@@ -21,6 +21,16 @@ public class BoardCoordinateModel : MonoBehaviour
     public static int SquareNumberInLine => 8;
 
 
+    /// <summary>
+    /// 盤の座標系のX軸
+    /// </summary>
+    private Vector3 AxisX => boardBasisTransform.right;
+
+    /// <summary>
+    /// 盤の座標系のY軸
+    /// </summary>
+    private Vector3 AxisY => boardBasisTransform.up;
+
     /// <summary> 
     /// 盤の中心のワールド座標
     /// </summary>
@@ -34,11 +44,11 @@ public class BoardCoordinateModel : MonoBehaviour
         get
         {
             // 盤座標系での、中心→原点オフセット
-            var boardOffset = SquareNumberInLine / 2f - 0.5f;
+            var boardOffset = SquareNumberInLine / 2f - 1f;
             // ワールド座標系での、中心→原点オフセット
             var worldOffset = boardOffset * squareScale;
             // 中心からXY軸へそれぞれオフセットを適応し、原点の座標を取得する。
-            return CenterWorldPosition - boardBasisTransform.right * worldOffset - boardBasisTransform.up * worldOffset;
+            return CenterWorldPosition - AxisX * worldOffset - AxisY * worldOffset;
         }
     }
 
@@ -54,14 +64,33 @@ public class BoardCoordinateModel : MonoBehaviour
     }
 
     /// <summary>
+    /// ワールド座標から盤上の座標を取得します。
+    /// </summary>
+    /// <param name="worldPosition"> ワールド座標(面に触れていなくても良い) </param>
+    /// <returns> 盤上の座標 </returns>
+    public Vector2Int GetBoardPosition(Vector3 worldPosition)
+    {
+        // 盤の原点からの相対座標に変換。
+        var relativePosition = worldPosition - OriginWorldPosition;
+        // 盤のXY軸それぞれに投影し、長さを計算。
+        var dx = Vector3.Dot(AxisX, relativePosition);
+        var dy = Vector3.Dot(AxisY, relativePosition);
+        // その長さがマス何個分の位置にあるかを計算。
+        var x = Mathf.FloorToInt(dx / squareScale);
+        var y = Mathf.FloorToInt(dy / squareScale);
+        return new Vector2Int(x, y);
+    }
+
+    /// <summary>
     /// 盤上の座標からワールド座標を取得します。
     /// </summary>
     /// <param name="boardPosition"> 盤上の座標 </param>
     /// <returns> ワールド座標 </returns>
     public Vector3 GetWorldPosition(Vector2Int boardPosition)
     {
-        var x = boardPosition.x * squareScale;
-        var y = boardPosition.y * squareScale;
-        return OriginWorldPosition + boardBasisTransform.right * x + boardBasisTransform.up * y;
+        // マスの中心に合わせるために0.5fを加算。
+        var x = (boardPosition.x + 0.5f) * squareScale;
+        var y = (boardPosition.y + 0.5f) * squareScale;
+        return OriginWorldPosition + AxisX * x + AxisY * y;
     }
 }
