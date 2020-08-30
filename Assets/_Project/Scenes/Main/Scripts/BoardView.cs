@@ -1,11 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 
 /// <summary>
 /// オセロの盤ビュー
 /// </summary>
-public class BoardView : MonoBehaviour, IBoardReader
+public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
 {
     [SerializeField, Tooltip("配置する石の複製元")]
     private DiskView diskOriginal = default;
@@ -46,11 +47,6 @@ public class BoardView : MonoBehaviour, IBoardReader
     /// 盤のクリックのストリームソース
     /// </summary>
     private ISubject<Vector2Int> ClickSubject { get; } = new Subject<Vector2Int>();
-
-    /// <summary>
-    /// 盤のクリックのイベント
-    /// </summary>
-    public IObservable<Vector2Int> ClickObservable => ClickSubject;
 
 
     /// <summary>
@@ -112,7 +108,7 @@ public class BoardView : MonoBehaviour, IBoardReader
             throw new ArgumentOutOfRangeException("盤の範囲外が指定されました。");
         }
         if (DiskViews[putDisk.Position.y, putDisk.Position.x]) {
-            throw new ArgumentException("既に石が置かれています。");
+            throw new ArgumentException($"{putDisk.Position}には既に石が置かれています。");
         }
 
         // 指定された座標に石を生成。
@@ -171,6 +167,15 @@ public class BoardView : MonoBehaviour, IBoardReader
         else {
             return SquareState.White;
         }
+    }
+
+    /// <summary>
+    /// 盤のクリックを待機します。
+    /// </summary>
+    /// <returns> クリックされた盤上の座標 </returns>
+    public UniTask<Vector2Int> WaitToClickAsync()
+    {
+        return ClickSubject.First().ToUniTask();
     }
 
 
