@@ -44,7 +44,7 @@ public class BoardCoordinateModel : MonoBehaviour
         get
         {
             // 盤座標系での、中心→原点オフセット
-            var boardOffset = SquareNumberInLine / 2f - 1f;
+            var boardOffset = SquareNumberInLine / 2f;
             // ワールド座標系での、中心→原点オフセット
             var worldOffset = boardOffset * squareScale;
             // 中心からXY軸へそれぞれオフセットを適応し、原点の座標を取得する。
