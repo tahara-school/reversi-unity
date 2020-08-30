@@ -57,7 +57,8 @@ public class BoardView : MonoBehaviour
     /// 盤上に石を置きます。
     /// </summary>
     /// <param name="boardPosition"> 盤上の座標 </param>
-    public void PutDisk(Vector2Int boardPosition)
+    /// <param name="isBlack"> 表面は黒か </param>
+    public void PutDisk(Vector2Int boardPosition, bool isBlack)
     {
         // 引数が正しいかを確認。
         var isInRange = coordinateModel.GetIsInRange(boardPosition);
@@ -72,6 +73,9 @@ public class BoardView : MonoBehaviour
         var putDisk = Instantiate(diskOriginal, coordinateModel.GetWorldPosition(boardPosition), Quaternion.identity, diskParent);
         // 置かれた石を二次元配列に保持。
         DiskViews[boardPosition.y, boardPosition.x] = putDisk;
+
+        // 指定された表面の色に合わせてひっくり返す。
+        putDisk.Turn(isBlack);
     }
 
     /// <summary>
