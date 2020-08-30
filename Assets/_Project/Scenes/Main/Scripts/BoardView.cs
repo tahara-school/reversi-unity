@@ -103,26 +103,25 @@ public class BoardView : MonoBehaviour, IBoardReader
     /// <summary>
     /// 盤上に石を置きます。
     /// </summary>
-    /// <param name="boardPosition"> 盤上の座標 </param>
-    /// <param name="isBlack"> 表面は黒か </param>
-    public void PutDisk(Vector2Int boardPosition, bool isBlack)
+    /// <param name="putDisk"> 置く石の情報 </param>
+    public void PutDisk(DiskInformation putDisk)
     {
         // 引数が正しいかを確認。
-        var isInRange = coordinateModel.GetIsInRange(boardPosition);
+        var isInRange = coordinateModel.GetIsInRange(putDisk.Position);
         if (!isInRange) {
             throw new ArgumentOutOfRangeException("盤の範囲外が指定されました。");
         }
-        if (DiskViews[boardPosition.y, boardPosition.x]) {
+        if (DiskViews[putDisk.Position.y, putDisk.Position.x]) {
             throw new ArgumentException("既に石が置かれています。");
         }
 
         // 指定された座標に石を生成。
-        var putDisk = Instantiate(diskOriginal, coordinateModel.GetWorldPosition(boardPosition), Quaternion.identity, diskParent);
+        var instantiatedDisk = Instantiate(diskOriginal, coordinateModel.GetWorldPosition(putDisk.Position), Quaternion.identity, diskParent);
         // 置かれた石を二次元配列に保持。
-        DiskViews[boardPosition.y, boardPosition.x] = putDisk;
+        DiskViews[putDisk.Position.y, putDisk.Position.x] = instantiatedDisk;
 
         // 指定された表面の色に合わせてひっくり返す。
-        putDisk.Turn(isBlack);
+        instantiatedDisk.Turn(putDisk.IsBlack);
     }
 
     /// <summary>
@@ -178,10 +177,10 @@ public class BoardView : MonoBehaviour, IBoardReader
     private void Start()
     {
         // オセロの初期配置。
-        PutDisk(new Vector2Int(3, 3), false);
-        PutDisk(new Vector2Int(3, 4), true);
-        PutDisk(new Vector2Int(4, 3), true);
-        PutDisk(new Vector2Int(4, 4), false);
+        PutDisk(new DiskInformation(false, new Vector2Int(3, 3)));
+        PutDisk(new DiskInformation(true, new Vector2Int(3, 4)));
+        PutDisk(new DiskInformation(true, new Vector2Int(4, 3)));
+        PutDisk(new DiskInformation(false, new Vector2Int(4, 4)));
     }
 
     private void Update()
