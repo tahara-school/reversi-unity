@@ -28,6 +28,11 @@ public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
 
 
     /// <summary>
+    /// 初期化完了しているか
+    /// </summary>
+    private bool IsInitialized { get; set; }
+
+    /// <summary>
     /// 盤に置かれた石
     /// </summary>
     private DiskView[,] DiskViews { get; set; }
@@ -174,6 +179,14 @@ public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
         return ClickSubject.First().ToUniTask();
     }
 
+    /// <summary>
+    /// 初期化の完了を待機します。
+    /// </summary>
+    public async UniTask WaitToInitializeAsync()
+    {
+        await UniTask.WaitUntil(() => IsInitialized);
+    }
+
 
     private void Start()
     {
@@ -185,6 +198,9 @@ public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
         PutDisk(new DiskInformation(true, new Vector2Int(3, 4)));
         PutDisk(new DiskInformation(true, new Vector2Int(4, 3)));
         PutDisk(new DiskInformation(false, new Vector2Int(4, 4)));
+
+        // 初期化完了。
+        IsInitialized = true;
     }
 
     private void Update()

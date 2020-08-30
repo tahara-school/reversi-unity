@@ -24,12 +24,15 @@ public class GameController : MonoBehaviour
     private bool IsBlackTurn { get; set; } = true;
 
 
-    private void Start()
+    private void Awake()
     {
         // キャラクター両者を初期化。
         Player = new Player("TestPlayer", boardView);
         Opponent = new AI();
+    }
 
+    private void Start()
+    {
         // ゲームを開始。
         PlayReversiAsync().Forget();
     }
@@ -39,6 +42,9 @@ public class GameController : MonoBehaviour
     /// </summary>
     private async UniTaskVoid PlayReversiAsync()
     {
+        // 盤の初期化を待機。
+        await boardView.WaitToInitializeAsync();
+
         while (true) {
             // このターンのキャラクターを取得。
             var turnPlayer = IsBlackTurn ? Player : Opponent;
