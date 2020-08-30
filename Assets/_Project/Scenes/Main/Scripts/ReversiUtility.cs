@@ -100,4 +100,30 @@ public static class ReversiUtility
         // 全方向のひっくり返る石を集めて返す。
         return directions.SelectMany(d => GetTurnDisks(board, putDisk, d));
     }
+
+    /// <summary>
+    /// 盤上に石を置くことが出来るかを取得します。
+    /// </summary>
+    /// <param name="board"> 盤情報インタフェース </param>
+    /// <param name="isBlack"> 置く石は黒か </param>
+    /// <returns> 盤上に石を置くことが出来るか </returns>
+    public static bool GetCanPutDisk(IBoardReader board, bool isBlack)
+    {
+        // 全マスを走査。
+        for (int x = 0; x < board.SquaresNumbers.x; x++) {
+            for (int y = 0; y < board.SquaresNumbers.y; y++) {
+                var p = new Vector2Int(x, y);
+
+                // 石が既にあるマスは無視。
+                var state = board.GetSquareState(p);
+                if (state != SquareState.Empty) { continue; }
+
+                // 石を置くことで石をひっくり返せるマスだったら、そのマスの座標を返す。
+                var turnDisks = GetTurnDisks(board, new DiskInformation(isBlack, p));
+                var turnDisksExist = turnDisks.Count() != 0;
+                if (turnDisksExist) { return true; }
+            }
+        }
+        return false;
+    }
 }
