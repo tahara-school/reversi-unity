@@ -59,6 +59,12 @@ public class BoardView : MonoBehaviour
     /// <param name="boardPosition"> 盤上の座標 </param>
     private void Select(Vector2Int boardPosition)
     {
+        // 引数が正しいかを確認。
+        var isInRange = coordinateModel.GetIsInRange(boardPosition);
+        if (!isInRange) {
+            throw new ArgumentOutOfRangeException("盤の範囲外が指定されました。");
+        }
+
         // 盤上の座標をワールド座標に変換。
         var worldPosition = coordinateModel.GetWorldPosition(boardPosition);
 
@@ -115,6 +121,11 @@ public class BoardView : MonoBehaviour
     /// <param name="boardPosition"> 盤上の座標 </param>
     public void TurnDisk(Vector2Int boardPosition)
     {
+        // 引数が正しいかを確認。
+        var isInRange = coordinateModel.GetIsInRange(boardPosition);
+        if (!isInRange) {
+            throw new ArgumentOutOfRangeException("盤の範囲外が指定されました。");
+        }
         if (!DiskViews[boardPosition.y, boardPosition.x]) {
             throw new ArgumentException("石が置かれていません。");
         }
@@ -130,6 +141,12 @@ public class BoardView : MonoBehaviour
     /// <returns> 盤の任意のマスの状態 </returns>
     public SquareState GetSquareState(Vector2Int boardPosition)
     {
+        // 引数が正しいかを確認。
+        var isInRange = coordinateModel.GetIsInRange(boardPosition);
+        if (!isInRange) {
+            throw new ArgumentOutOfRangeException("盤の範囲外が指定されました。");
+        }
+
         var diskView = DiskViews[boardPosition.y, boardPosition.x];
 
         // まだ石が置かれていない。
