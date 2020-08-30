@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UniRx;
 
 /// <summary>
 /// オセロの盤ビュー
@@ -18,6 +19,9 @@ public class BoardView : MonoBehaviour
     [SerializeField, Tooltip("選択中枠の親となるトランスフォーム")]
     private Transform selectedFrameParent = default;
 
+    [SerializeField, Tooltip("盤のコライダー")]
+    private Collider boardCollider = default;
+
     [SerializeField, Tooltip("盤の座標系モデル")]
     private BoardCoordinateModel coordinateModel = default;
 
@@ -31,6 +35,22 @@ public class BoardView : MonoBehaviour
     /// 選択中の枠
     /// </summary>
     private GameObject SelectedFrame { get; set; }
+
+    /// <summary>
+    /// マスを選択中か
+    /// </summary>
+    private bool IsSelecting { get; set; }
+
+
+    /// <summary>
+    /// 盤のクリックのストリームソース
+    /// </summary>
+    private ISubject<Vector2Int> ClickSubject { get; } = new Subject<Vector2Int>();
+
+    /// <summary>
+    /// 盤のクリックのイベント
+    /// </summary>
+    public IObservable<Vector2Int> ClickObservable => ClickSubject;
 
 
     /// <summary>
@@ -96,5 +116,31 @@ public class BoardView : MonoBehaviour
             throw new Exception("まだマスが選択されていないのに、選択解除しようとしました。");
         }
         Destroy(SelectedFrame);
+    }
+
+
+    private void Update()
+    {
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        // マウスが盤を指していたら
+        if (boardCollider.Raycast(ray, out var hitInfo, float.PositiveInfinity)) {
+            var boardPosition = coordinateModel.GetBoardPosition(hitInfo.point);
+
+            // 選択中の枠を生成or移動。
+            Select(boardPosition);
+            IsSelecting = true;
+
+            // このフレームにマウスクリックしていたら、選択中マスクリックイベント発火。
+            if (!Input.GetMouseButtonDown(0)) { return; }
+            ClickSubject.OnNext(boardPosition);
+        }
+        // マウスが盤を指していなかったら
+        else {
+            // 選択中の枠を削除。
+            if (!IsSelecting) { return; }
+            Deselect();
+            IsSelecting = false;
+        }
     }
 }
