@@ -6,11 +6,9 @@
 public interface IBoardReader
 {
     /// <summary>
-    /// 任意の盤上の座標が範囲外かを取得します。
+    /// X軸Y軸それぞれのマスの数
     /// </summary>
-    /// <param name="boardPosition"> 盤上の座標 </param>
-    /// <returns> 任意の盤上の座標が範囲外か </returns>
-    bool GetIsInRange(Vector2Int boardPosition);
+    Vector2Int SquaresNumbers { get; }
 
     /// <summary>
     /// 盤の任意のマスの状態を取得します。

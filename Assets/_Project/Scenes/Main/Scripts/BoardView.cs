@@ -30,7 +30,7 @@ public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
     /// <summary>
     /// 盤に置かれた石
     /// </summary>
-    private DiskView[,] DiskViews { get; } = new DiskView[BoardCoordinateModel.SquareNumberInLine, BoardCoordinateModel.SquareNumberInLine];
+    private DiskView[,] DiskViews { get; set; }
 
     /// <summary>
     /// 選択中の枠
@@ -47,6 +47,12 @@ public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
     /// 盤のクリックのストリームソース
     /// </summary>
     private ISubject<Vector2Int> ClickSubject { get; } = new Subject<Vector2Int>();
+
+
+    /// <summary>
+    /// X軸Y軸それぞれのマスの数
+    /// </summary>
+    public Vector2Int SquaresNumbers => coordinateModel.SquaresNumbers;
 
 
     /// <summary>
@@ -85,16 +91,6 @@ public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
         Destroy(SelectedFrame);
     }
 
-
-    /// <summary>
-    /// 任意の盤上の座標が範囲外かを取得します。
-    /// </summary>
-    /// <param name="boardPosition"> 盤上の座標 </param>
-    /// <returns> 任意の盤上の座標が範囲外か </returns>
-    public bool GetIsInRange(Vector2Int boardPosition)
-    {
-        return coordinateModel.GetIsInRange(boardPosition);
-    }
 
     /// <summary>
     /// 盤上に石を置きます。
@@ -181,6 +177,9 @@ public class BoardView : MonoBehaviour, IBoardReader, IBoardInput
 
     private void Start()
     {
+        // 配置した石の二次元配列を初期化。
+        DiskViews = new DiskView[SquaresNumbers.x, SquaresNumbers.y];
+
         // オセロの初期配置。
         PutDisk(new DiskInformation(false, new Vector2Int(3, 3)));
         PutDisk(new DiskInformation(true, new Vector2Int(3, 4)));

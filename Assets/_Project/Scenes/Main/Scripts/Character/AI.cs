@@ -25,8 +25,8 @@ public class AI : ICharacter
         await UniTask.Delay(System.TimeSpan.FromSeconds(1f));
 
         // 全マスを走査。
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
+        for (int x = 0; x < board.SquaresNumbers.x; x++) {
+            for (int y = 0; y < board.SquaresNumbers.y; y++) {
                 var p = new Vector2Int(x, y);
 
                 // 石が既にあるマスは無視。

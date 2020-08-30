@@ -14,11 +14,8 @@ public class BoardCoordinateModel : MonoBehaviour
     [SerializeField, Tooltip("1マスの大きさ(m)"), Min(0f)]
     private float squareScale = 1f;
 
-
-    /// <summary>
-    /// 盤の横一列のマスの数
-    /// </summary>
-    public static int SquareNumberInLine => 8;
+    [SerializeField, Tooltip("X軸Y軸それぞれのマスの数")]
+    private Vector2Int squaresNumbers = new Vector2Int(8, 8);
 
 
     /// <summary>
@@ -30,6 +27,12 @@ public class BoardCoordinateModel : MonoBehaviour
     /// 盤の座標系のY軸
     /// </summary>
     private Vector3 AxisY => boardBasisTransform.up;
+
+
+    /// <summary>
+    /// 盤の座標の最大値
+    /// </summary>
+    private Vector2Int MaxBoardPosition => new Vector2Int(SquaresNumbers.x - 1, SquaresNumbers.y - 1);
 
     /// <summary> 
     /// 盤の中心のワールド座標
@@ -44,13 +47,19 @@ public class BoardCoordinateModel : MonoBehaviour
         get
         {
             // 盤座標系での、中心→原点オフセット
-            var boardOffset = SquareNumberInLine / 2f;
+            var boardOffset = MathUtility.ToVector2Float(SquaresNumbers) / 2f;
             // ワールド座標系での、中心→原点オフセット
             var worldOffset = boardOffset * squareScale;
             // 中心からXY軸へそれぞれオフセットを適応し、原点の座標を取得する。
-            return CenterWorldPosition - AxisX * worldOffset - AxisY * worldOffset;
+            return CenterWorldPosition - AxisX * worldOffset.x - AxisY * worldOffset.y;
         }
     }
+
+
+    /// <summary>
+    /// X軸Y軸それぞれのマスの数
+    /// </summary>
+    public Vector2Int SquaresNumbers => squaresNumbers;
 
 
     /// <summary>
@@ -60,7 +69,7 @@ public class BoardCoordinateModel : MonoBehaviour
     /// <returns> 任意の盤上の座標が範囲外か </returns>
     public bool GetIsInRange(Vector2Int boardPosition)
     {
-        return MathUtility.IsInRange(boardPosition, new Vector2Int(0, 0), new Vector2Int(SquareNumberInLine - 1, SquareNumberInLine - 1));
+        return MathUtility.IsInRange(boardPosition, Vector2Int.zero, MaxBoardPosition);
     }
 
     /// <summary>

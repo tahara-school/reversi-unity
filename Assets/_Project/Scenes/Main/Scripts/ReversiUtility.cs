@@ -22,12 +22,8 @@ public static class ReversiUtility
         while (true) {
             checkPosition += checkDirection;
 
-            // 枠外まで対が無かった。
-            var isInRange = board.GetIsInRange(checkPosition);
-            if (!isInRange) { return Enumerable.Empty<Vector2Int>(); }
-
-            var state = board.GetSquareState(checkPosition);
             // 空白まで対が無かった。
+            var state = GetSquareStateOrEmpty(board, checkPosition);
             if (state == SquareState.Empty) { return Enumerable.Empty<Vector2Int>(); }
 
             // 対が見つかった。
@@ -47,6 +43,40 @@ public static class ReversiUtility
         }
     }
 
+    /// <summary>
+    /// 盤の任意のマスの状態を取得します。盤外だった場合は<see cref="SquareState.Empty"/>を返します。
+    /// </summary>
+    /// <param name="board"> 盤情報インタフェース </param>
+    /// <param name="boardPosition"> 盤上の座標 </param>
+    /// <returns></returns>
+    private static SquareState GetSquareStateOrEmpty(IBoardReader board, Vector2Int boardPosition)
+    {
+        // 枠外だったら、石が置かれていない扱いとする。
+        var isInRange = GetIsInRange(board, boardPosition);
+        if (!isInRange) { return SquareState.Empty; }
+
+        return board.GetSquareState(boardPosition);
+    }
+
+    /// <summary>
+    /// 任意の盤上の座標が範囲外かを取得します。
+    /// </summary>
+    /// <param name="board"> 盤情報インタフェース </param>
+    /// <param name="boardPosition"> 盤上の座標 </param>
+    /// <returns> 任意の盤上の座標が範囲外か </returns>
+    public static bool GetIsInRange(IBoardReader board, Vector2Int boardPosition)
+    {
+        return MathUtility.IsInRange(boardPosition, Vector2Int.zero, GetMaxBoardPosition(board));
+    }
+
+    /// <summary>
+    /// 盤の座標の最大値
+    /// </summary>
+    /// <param name="board"> 盤情報インタフェース </param>
+    public static Vector2Int GetMaxBoardPosition(IBoardReader board)
+    {
+        return new Vector2Int(board.SquaresNumbers.x - 1, board.SquaresNumbers.y - 1);
+    }
 
     /// <summary>
     /// 盤上の任意の場所に石を置いた時の、ひっくり返る石のシーケンスを取得します。
