@@ -20,4 +20,14 @@ public static class MathUtility
         // 「元の座標」と「範囲内に丸めた座標」が等しい場合、範囲内である。
         return source == temp;
     }
+
+    /// <summary>
+    /// 整数ベクトル2D型から浮動小数点数ベクトル2D型へ変換します。
+    /// </summary>
+    /// <param name="source"> 変換元の整数ベクトル2D型 </param>
+    /// <returns> 変換後の浮動小数点数ベクトル2D型 </returns>
+    public static Vector2 ToVector2Float(Vector2Int source)
+    {
+        return new Vector2(source.x, source.y);
+    }
 }
