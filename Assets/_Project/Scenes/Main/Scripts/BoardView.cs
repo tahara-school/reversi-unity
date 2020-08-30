@@ -148,6 +148,15 @@ public class BoardView : MonoBehaviour
     }
 
 
+    private void Start()
+    {
+        // オセロの初期配置。
+        PutDisk(new Vector2Int(3, 3), false);
+        PutDisk(new Vector2Int(3, 4), true);
+        PutDisk(new Vector2Int(4, 3), true);
+        PutDisk(new Vector2Int(4, 4), false);
+    }
+
     private void Update()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
