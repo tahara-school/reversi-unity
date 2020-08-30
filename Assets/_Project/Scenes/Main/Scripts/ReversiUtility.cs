@@ -102,13 +102,16 @@ public static class ReversiUtility
     }
 
     /// <summary>
-    /// 盤上に石を置くことが出来るかを取得します。
+    /// 盤の状態を取得します。
     /// </summary>
     /// <param name="board"> 盤情報インタフェース </param>
     /// <param name="isBlack"> 置く石は黒か </param>
-    /// <returns> 盤上に石を置くことが出来るか </returns>
-    public static bool GetCanPutDisk(IBoardReader board, bool isBlack)
+    /// <returns> 盤の状態 </returns>
+    public static BoardState GetBoardState(IBoardReader board, bool isBlack)
     {
+        // 空白のマスがあるか。
+        var emptyExists = false;
+
         // 全マスを走査。
         for (int x = 0; x < board.SquaresNumbers.x; x++) {
             for (int y = 0; y < board.SquaresNumbers.y; y++) {
@@ -118,12 +121,16 @@ public static class ReversiUtility
                 var state = board.GetSquareState(p);
                 if (state != SquareState.Empty) { continue; }
 
+                emptyExists = true;
+
                 // 石を置くことで石をひっくり返せるマスだったら、そのマスの座標を返す。
                 var turnDisks = GetTurnDisks(board, new DiskInformation(isBlack, p));
                 var turnDisksExist = turnDisks.Count() != 0;
-                if (turnDisksExist) { return true; }
+                if (turnDisksExist) { return BoardState.Continue; }
             }
         }
-        return false;
+
+        // 空白のマスがあったらパス、無かったらゲーム終了。
+        return emptyExists ? BoardState.Pass : BoardState.Finish;
     }
 }
