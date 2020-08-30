@@ -5,7 +5,7 @@ using UniRx;
 /// <summary>
 /// オセロの盤ビュー
 /// </summary>
-public class BoardView : MonoBehaviour
+public class BoardView : MonoBehaviour, IBoardReader
 {
     [SerializeField, Tooltip("配置する石の複製元")]
     private DiskView diskOriginal = default;
@@ -89,6 +89,16 @@ public class BoardView : MonoBehaviour
         Destroy(SelectedFrame);
     }
 
+
+    /// <summary>
+    /// 任意の盤上の座標が範囲外かを取得します。
+    /// </summary>
+    /// <param name="boardPosition"> 盤上の座標 </param>
+    /// <returns> 任意の盤上の座標が範囲外か </returns>
+    public bool GetIsInRange(Vector2Int boardPosition)
+    {
+        return coordinateModel.GetIsInRange(boardPosition);
+    }
 
     /// <summary>
     /// 盤上に石を置きます。
